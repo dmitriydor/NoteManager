@@ -6,6 +6,33 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Ui\" />
+    <Folder Include="Data" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Ui\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Ui\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Ui\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Ui\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Ui\note-manager\angular.json" />
+    <_ContentIncludedByDefault Remove="Ui\note-manager\e2e\tsconfig.json" />
+    <_ContentIncludedByDefault Remove="Ui\note-manager\package-lock.json" />
+    <_ContentIncludedByDefault Remove="Ui\note-manager\package.json" />
+    <_ContentIncludedByDefault Remove="Ui\note-manager\tsconfig.app.json" />
+    <_ContentIncludedByDefault Remove="Ui\note-manager\tsconfig.json" />
+    <_ContentIncludedByDefault Remove="Ui\note-manager\tsconfig.spec.json" />
+    <_ContentIncludedByDefault Remove="Ui\note-manager\tslint.json" />
   </ItemGroup>
 </Project>
