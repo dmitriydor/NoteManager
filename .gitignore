@@ -1,12 +1,12 @@
 # compiled output
-/NoteManager/Ui/note-manager/dist
-/NoteManager/Ui/note-manager/tmp
-/NoteManager/Ui/note-manager/out-tsc
+/Ui/note-manager/dist
+/Ui/note-manager/tmp
+/Ui/note-manager/out-tsc
 # Only exists if Bazel was run
-/NoteManager/Ui/note-manager/bazel-out
+/Ui/note-manager/bazel-out
 
 # dependencies
-/NoteManager/Ui/note-manager/node_modules
+/Ui/note-manager/node_modules
 
 # profiling files
 chrome-profiler-events*.json
@@ -30,14 +30,14 @@ speed-measure-plugin*.json
 .history/*
 
 # misc
-/NoteManager/Ui/note-manager/.sass-cache
-/NoteManager/Ui/note-manager/connect.lock
-/NoteManager/Ui/note-manager/coverage
-/NoteManager/Ui/note-manager/libpeerconnection.log
+/Ui/note-manager/.sass-cache
+/Ui/note-manager/connect.lock
+/Ui/note-manager/coverage
+/Ui/note-manager/libpeerconnection.log
 npm-debug.log
 yarn-error.log
 testem.log
-/NoteManager/Ui/note-manager/typings
+/Ui/note-manager/typings
 
 # System Files
 .DS_Store
