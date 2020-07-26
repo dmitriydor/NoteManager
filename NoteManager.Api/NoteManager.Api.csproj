@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Data" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Ui\**" />
   </ItemGroup>
 
@@ -34,5 +30,13 @@
     <_ContentIncludedByDefault Remove="Ui\note-manager\tsconfig.json" />
     <_ContentIncludedByDefault Remove="Ui\note-manager\tsconfig.spec.json" />
     <_ContentIncludedByDefault Remove="Ui\note-manager\tslint.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NoteManager.Application\NoteManager.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
   </ItemGroup>
 </Project>
