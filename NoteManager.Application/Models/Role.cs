@@ -1,16 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace NoteManager.Application.Models
+﻿namespace NoteManager.Application.Models
 {
-    public sealed class Role : IdentityRole<int>
+    public enum Role
     {
-        public Role()
-        {
-        }
-
-        public Role(string name)
-        {
-            Name = name;
-        }
+        Administrator,
+        DefaultUser,
+        VipUser
     }
 }

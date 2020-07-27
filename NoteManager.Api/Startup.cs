@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -64,12 +66,36 @@ namespace NoteManager.Api
             //sql
             services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(new NpgsqlConnection(Configuration.GetSection("PostgreSql").GetValue<string>("ConnectionString"))));
-            services.AddIdentity<User, Role>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+            services.AddIdentityCore<User>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
             services.AddCors();
             services.AddControllers();
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("note_manager", new OpenApiInfo {Title = "Note Manager API", Version = "v1"});
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the bearer scheme", 
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey, 
+                    In = ParameterLocation.Header
+                });
+                options.AddSecurityRequirement( new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
+                        },
+                        new List<string>()
+                    }
+                });
             });
         }
 
