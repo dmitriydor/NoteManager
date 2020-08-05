@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,9 +12,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NoteManager.Api.Data;
+using NoteManager.Api.Models;
 using NoteManager.Api.Options;
-using NoteManager.Application.Data;
-using NoteManager.Application.Models;
+using NoteManager.Api.Services;
 using Npgsql;
 
 namespace NoteManager.Api
@@ -28,15 +28,19 @@ namespace NoteManager.Api
         }
 
         public IConfiguration Configuration { get; }
-
+        
+        //todo: вынести в extentions все подключаемые сервисы 
         public void ConfigureServices(IServiceCollection services)
         {
+            //registration custom services
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            
             //jwt 
             services.Configure<JwtOptions>(Configuration.GetSection("JwtOptions"));
             services.Configure<SwaggerOptions>(Configuration.GetSection("SwaggerOptions"));
             var jwtOptions = new JwtOptions();
             Configuration.Bind(nameof(jwtOptions), jwtOptions);
-            
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -50,25 +54,23 @@ namespace NoteManager.Api
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.Secret)),
- 
-                        ValidateIssuer = true,
-                        ValidIssuer = jwtOptions.Issure,
- 
-                        ValidateAudience = true,
-                        ValidAudience = jwtOptions.Audience,
- 
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
                         ValidateLifetime = true,
- 
                         ClockSkew = TimeSpan.FromSeconds(5)
                     };
                 });
-            
+
             //sql
-            services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(options =>
+            services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(new NpgsqlConnection(Configuration.GetSection("PostgreSql").GetValue<string>("ConnectionString"))));
-            services.AddIdentityCore<User>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
+            
+            // cors and controllers
             services.AddCors();
             services.AddControllers();
+            
+            //swagger
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("note_manager", new OpenApiInfo {Title = "Note Manager API", Version = "v1"});

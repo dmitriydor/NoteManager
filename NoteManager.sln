@@ -5,10 +5,6 @@ VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoteManager.Api", "NoteManager.Api\NoteManager.Api.csproj", "{5D694F04-8A64-49B1-B08E-9919F0AB7D60}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ui", "Ui", "{7AC95C5D-305D-4466-A9D0-5294244E04AA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoteManager.Application", "NoteManager.Application\NoteManager.Application.csproj", "{B062FF73-9E7A-4157-9712-F7FB44B11B4B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoteManager.Tests", "NoteManager.Tests\NoteManager.Tests.csproj", "{5896F63A-CB60-4F84-A3D7-E5C4C2F9196F}"
 EndProject
 Global
@@ -21,10 +17,6 @@ Global
 		{5D694F04-8A64-49B1-B08E-9919F0AB7D60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D694F04-8A64-49B1-B08E-9919F0AB7D60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D694F04-8A64-49B1-B08E-9919F0AB7D60}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B062FF73-9E7A-4157-9712-F7FB44B11B4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B062FF73-9E7A-4157-9712-F7FB44B11B4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B062FF73-9E7A-4157-9712-F7FB44B11B4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B062FF73-9E7A-4157-9712-F7FB44B11B4B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5896F63A-CB60-4F84-A3D7-E5C4C2F9196F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5896F63A-CB60-4F84-A3D7-E5C4C2F9196F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5896F63A-CB60-4F84-A3D7-E5C4C2F9196F}.Release|Any CPU.ActiveCfg = Release|Any CPU
