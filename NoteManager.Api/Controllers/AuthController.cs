@@ -16,22 +16,40 @@ namespace NoteManager.Api.Controllers
             _authenticationService = authenticationService;
         }
 
-        [HttpPost("/registration")]
+        [HttpPost("registration")]
         public async Task<RegistrationResponse> Registration([FromBody]RegistrationRequest request )
         {
-            var authResponse = await _authenticationService.RegistrationAsync(request.Email, request.Password,
+            var authenticationResult = await _authenticationService.RegistrationAsync(request.Email, request.Password,
                 request.FirstName, request.LastName);
-            if (!authResponse.Success)
+            if (!authenticationResult.Success)
             {
-                return new RegistrationResponse()
+                return new RegistrationResponse
                 {
-                    ErrorMessages = authResponse.ErrorMessages
+                    ErrorMessages = authenticationResult.ErrorMessages
                 };
             }
 
-            return new RegistrationResponse()
+            return new RegistrationResponse
             {
-                Token = authResponse.Token,
+                Token = authenticationResult.Token,
+            };
+        }
+
+        [HttpPost("login")]
+        public async Task<LoginResponse> Login([FromBody]LoginRequest request)
+        {
+            var authenticationResult = await _authenticationService.LoginAsync(request.Email, request.Password);
+            if (!authenticationResult.Success)
+            {
+                return new LoginResponse
+                {
+                    ErrorMessages = authenticationResult.ErrorMessages
+                };
+            }
+
+            return new LoginResponse
+            {
+                Token = authenticationResult.Token,
             };
         }
     }

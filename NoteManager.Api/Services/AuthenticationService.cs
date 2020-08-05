@@ -23,16 +23,17 @@ namespace NoteManager.Api.Services
         }
         public async Task<AuthenticationResult> RegistrationAsync(string email, string password, string firstName, string lastName)
         {
-            var existingUser = await _userManager.FindByEmailAsync(email);
-            if (existingUser != null)
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
             {
-                return new AuthenticationResult()
+                return new AuthenticationResult
                 {
+                    Success = false,
                     ErrorMessages = new[] {"User with this email already exists"}
                 };
             }
 
-            var newUser = new User()
+            var newUser = new User
             {
                 Email = email,
                 FirstName = firstName,
@@ -44,16 +45,44 @@ namespace NoteManager.Api.Services
             var createdUser = await _userManager.CreateAsync(newUser, password);
             if (!createdUser.Succeeded)
             {
-                return new AuthenticationResult()
+                return new AuthenticationResult
                 {
                     Success = createdUser.Succeeded,
                     ErrorMessages = createdUser.Errors.Select(x => x.Description)
                 };
             }
-            return new AuthenticationResult()
+            return new AuthenticationResult
             {
                 Success = true,
                 Token = GenerateJwtToken(newUser)
+            };
+        }
+
+        public async Task<AuthenticationResult> LoginAsync(string email, string password)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return new AuthenticationResult
+                {
+                    Success = false,
+                    ErrorMessages = new[] {"User does not exits"}
+                };
+            }
+
+            var validPassword = await _userManager.CheckPasswordAsync(user, password);
+            if (!validPassword)
+            {
+                return new AuthenticationResult
+                {
+                    Success = false,
+                    ErrorMessages = new[] {"Wrong email or password"}
+                };
+            }
+            return new AuthenticationResult
+            {
+                Success = true,
+                Token = GenerateJwtToken(user)
             };
         }
 
@@ -61,7 +90,7 @@ namespace NoteManager.Api.Services
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor()
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
