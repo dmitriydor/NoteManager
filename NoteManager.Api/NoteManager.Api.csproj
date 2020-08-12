@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Data" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Ui\**" />
   </ItemGroup>
 
@@ -34,5 +30,21 @@
     <_ContentIncludedByDefault Remove="Ui\note-manager\tsconfig.json" />
     <_ContentIncludedByDefault Remove="Ui\note-manager\tsconfig.spec.json" />
     <_ContentIncludedByDefault Remove="Ui\note-manager\tslint.json" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.6" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="3.1.6" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Infrastructure\Extentions" />
+    <Folder Include="Infrastructure\Filters" />
   </ItemGroup>
 </Project>
