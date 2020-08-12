@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NoteManager.Api.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20200804122051_Initial")]
-    partial class Initial
+    [Migration("20200812133642_+_RefreshToken")]
+    partial class _RefreshToken
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,26 +21,37 @@ namespace NoteManager.Api.Data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("NoteManager.Api.Models.RefreshToken", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("Token")
                         .HasColumnType("text");
 
-                    b.Property<string>("ConcurrencyStamp")
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("ExpiryDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("Invalidated")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Jti")
                         .HasColumnType("text");
 
-                    b.Property<string>("Name")
+                    b.Property<bool>("Used")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserId")
                         .HasColumnType("text");
 
-                    b.Property<string>("NormalizedName")
-                        .HasColumnType("text");
+                    b.HasKey("Token");
 
-                    b.HasKey("Id");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Roles");
+                    b.ToTable("RefreshTokens");
                 });
 
-            modelBuilder.Entity("NoteManager.Application.Models.User", b =>
+            modelBuilder.Entity("NoteManager.Api.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -64,9 +75,11 @@ namespace NoteManager.Api.Data.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
@@ -102,6 +115,13 @@ namespace NoteManager.Api.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("NoteManager.Api.Models.RefreshToken", b =>
+                {
+                    b.HasOne("NoteManager.Api.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

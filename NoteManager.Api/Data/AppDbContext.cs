@@ -8,6 +8,6 @@ namespace NoteManager.Api.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options){}
         public DbSet<User> Users { get; set; }
-        public DbSet<IdentityRole> Roles { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
     }
 }

@@ -7,5 +7,6 @@ namespace NoteManager.Api.Services
     {
         Task<AuthenticationResult> RegistrationAsync(string email, string password, string firstName, string lastName);
         Task<AuthenticationResult> LoginAsync(string email, string password);
+        Task<AuthenticationResult> RefreshTokenAsync(string requestToken, string requestRefreshToken);
     }
 }

@@ -4,7 +4,6 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NoteManager.Api.Data;
+using NoteManager.Api.Data.Repositories;
 using NoteManager.Api.Models;
 using NoteManager.Api.Options;
 using NoteManager.Api.Services;
@@ -34,13 +34,25 @@ namespace NoteManager.Api
         {
             //registration custom services
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
             
             //jwt 
             services.Configure<JwtOptions>(Configuration.GetSection("JwtOptions"));
             services.Configure<SwaggerOptions>(Configuration.GetSection("SwaggerOptions"));
             var jwtOptions = new JwtOptions();
             Configuration.Bind(nameof(jwtOptions), jwtOptions);
-
+            
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.Secret)),
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.FromSeconds(5)
+            };
+            services.AddSingleton(tokenValidationParameters);
+            
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -50,21 +62,13 @@ namespace NoteManager.Api
                 .AddJwtBearer(options =>
                 {
                     options.SaveToken = true;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtOptions.Secret)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.FromSeconds(5)
-                    };
+                    options.TokenValidationParameters = tokenValidationParameters;
                 });
 
             //sql
             services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(new NpgsqlConnection(Configuration.GetSection("PostgreSql").GetValue<string>("ConnectionString"))));
-            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
+            services.AddIdentityCore<User>().AddEntityFrameworkStores<AppDbContext>();
             
             // cors and controllers
             services.AddCors();

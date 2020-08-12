@@ -1,9 +1,12 @@
-﻿namespace NoteManager.Api.Options
+﻿using System;
+
+namespace NoteManager.Api.Options
 {
     public class JwtOptions
     {
         public string Secret { get; set; }
-        public string Issure { get; set; }
+        public string Issuer { get; set; }
         public string Audience { get; set; }
+        public TimeSpan LifeTime { get; set; }
     }
 }
