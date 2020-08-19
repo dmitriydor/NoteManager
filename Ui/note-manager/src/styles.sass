@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+@import "assets/colors"
+*
+  font-family: Abel, sans-serif
+  font-size: 14px
+  box-sizing: border-box
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+
+html, body
+  width: 100%
+  height: 100vh
+  margin: 0
+
+button[d-button]
+  background-color: $primary
+  color: $text-white
+
+button[d-button]:focus
+  outline: 2px solid $primary-focus
+
+button[d-button]:hover
+  background-color: $primary-hover
+
+input[d-input]
+  width: 305px
+  line-height: 20px
+  padding: 0 0 1px
+  border: none
+  border-bottom: 1px solid $primary
+
+input[d-input]:focus
+  outline: none
