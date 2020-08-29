@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using NoteManager.Api.Models;
 
 namespace NoteManager.Api.Services
@@ -8,5 +9,6 @@ namespace NoteManager.Api.Services
         Task<AuthenticationResult> RegistrationAsync(string email, string password, string firstName, string lastName);
         Task<AuthenticationResult> LoginAsync(string email, string password);
         Task<AuthenticationResult> RefreshTokenAsync(string requestToken, string requestRefreshToken);
+        void SetRefreshTokenInCookie(RefreshToken refreshToken, HttpContext context);
     }
 }

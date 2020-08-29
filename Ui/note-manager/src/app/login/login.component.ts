@@ -26,7 +26,6 @@ export class LoginComponent implements OnInit {
     this.authenticateService.login(this.loginForm.value)
       .subscribe(response => {
         sessionStorage.setItem('access_token', response.token);
-        sessionStorage.setItem('refresh_token', response.refreshToken);
       });
   }
 }

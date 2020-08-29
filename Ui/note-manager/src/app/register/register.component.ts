@@ -28,7 +28,6 @@ export class RegisterComponent implements OnInit {
     this.authenticateService.register(this.registerForm.value)
       .subscribe(response => {
         sessionStorage.setItem('access_token', response.token);
-        sessionStorage.setItem('refresh_token', response.refreshToken);
       });
   }
 }

@@ -36,11 +36,10 @@ namespace NoteManager.Api.Controllers
                     ErrorMessages = authenticationResult.ErrorMessages
                 };
             }
-
+            _authenticationService.SetRefreshTokenInCookie(authenticationResult.RefreshToken, HttpContext);
             return new AuthResponse
             {
                 Token = authenticationResult.Token,
-                RefreshToken = authenticationResult.RefreshToken
             };
         }
 
@@ -55,19 +54,26 @@ namespace NoteManager.Api.Controllers
                     ErrorMessages = authenticationResult.ErrorMessages
                 };
             }
-
+            _authenticationService.SetRefreshTokenInCookie(authenticationResult.RefreshToken, HttpContext);
             return new AuthResponse
             {
                 Token = authenticationResult.Token,
-                RefreshToken = authenticationResult.RefreshToken
             };
         }
 
         [HttpPost("refresh-token")]
         public async Task<AuthResponse> RefreshToken([FromBody] RefreshRequest request)
         {
+            var refreshToken = Request.Cookies["refreshToken"];
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return new AuthResponse
+                {
+                    ErrorMessages = new []{"Refresh Token not found!"}
+                };
+            }
             var authenticationResult =
-                await _authenticationService.RefreshTokenAsync(request.Token, request.RefreshToken);
+                await _authenticationService.RefreshTokenAsync(request.Token, refreshToken);
             if (!authenticationResult.IsAuthenticated)
             {
                 return new AuthResponse
@@ -75,11 +81,10 @@ namespace NoteManager.Api.Controllers
                     ErrorMessages = authenticationResult.ErrorMessages
                 };
             }
-
+            _authenticationService.SetRefreshTokenInCookie(authenticationResult.RefreshToken, HttpContext);
             return new AuthResponse
             {
                 Token = authenticationResult.Token,
-                RefreshToken = authenticationResult.RefreshToken
             };
         }
     }

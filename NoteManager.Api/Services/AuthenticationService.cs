@@ -1,9 +1,12 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -152,9 +155,19 @@ namespace NoteManager.Api.Services
             await _refreshTokenRepository.UpdateTokenAsync(storedRefreshToken);
             User user = await _userManager.FindByIdAsync(validatedToken.Claims.Single(x => x.Type == "id").Value);
             return await GenerateJwtToken(user);
-
         }
 
+        public void SetRefreshTokenInCookie(RefreshToken refreshToken, HttpContext context)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                Expires = refreshToken.ExpiryDate
+            };
+            context.Response.Cookies.Append("refresh_token", refreshToken.Token, cookieOptions);
+        }
+        
         private ClaimsPrincipal GetPrincipal(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -195,13 +208,11 @@ namespace NoteManager.Api.Services
                     SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            RefreshToken refreshToken = await _refreshTokenRepository.CreateTokenAsync(token, user);
-            
             return new AuthenticationResult
             {
                 IsAuthenticated = true,
                 Token = tokenHandler.WriteToken(token),
-                RefreshToken = refreshToken.Token
+                RefreshToken = await _refreshTokenRepository.CreateTokenAsync(token, user)
             };
         }
     }
