@@ -8,7 +8,7 @@ namespace NoteManager.Api.Data.Repositories
 {
     public class RefreshTokenRepository : IRefreshTokenRepository
     {
-        private AppDbContext _context;
+        private readonly AppDbContext _context;
 
         public RefreshTokenRepository(AppDbContext context)
         {

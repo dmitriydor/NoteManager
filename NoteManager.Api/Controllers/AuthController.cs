@@ -17,7 +17,7 @@ namespace NoteManager.Api.Controllers
             _authenticationService = authenticationService;
         }
 
-        [HttpPost("registration")]
+        [HttpPost("register")]
         public async Task<AuthResponse> Registration([FromBody]RegistrationRequest request )
         {
             if (!ModelState.IsValid)
