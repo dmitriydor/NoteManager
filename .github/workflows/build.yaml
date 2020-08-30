@@ -24,6 +24,6 @@ jobs:
       #- name: Test .net
       #  run: dotnet test --no-restore --verbosity normal
       - name: Npm install
-        run: npm install ./Ui
+        run: npm install ./Ui/note-manager
       - name: Npm Build
-        run: cd ./Ui && npm run build
+        run: cd ./Ui/note-manager && npm run build
