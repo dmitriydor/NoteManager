@@ -10,6 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RegisterComponent } from './register/register.component';
 import { AuthenticateService } from './services/authenticate.service';
 import { HttpClientModule } from '@angular/common/http';
+import { HelloComponent } from './hello/hello.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { HttpClientModule } from '@angular/common/http';
     LoginComponent,
     DButtonDirective,
     DInputDirective,
-    RegisterComponent
+    RegisterComponent,
+    HelloComponent
   ],
   imports: [
     BrowserModule,

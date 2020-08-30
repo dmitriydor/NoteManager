@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticateService} from '../services/authenticate.service';
-import {AuthResponse} from '../models/auth.response';
-import {tap} from 'rxjs/operators';
+import {setToken} from '../utils/access.token';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +12,7 @@ import {tap} from 'rxjs/operators';
 export class RegisterComponent implements OnInit {
 
   registerForm: FormGroup;
-  constructor(private fb: FormBuilder, private authenticateService: AuthenticateService) {
+  constructor(private fb: FormBuilder, private authenticateService: AuthenticateService, private router: Router) {
     this.registerForm = this.fb.group({
       firstname: ['', Validators.required],
       lastname: ['', Validators.required],
@@ -27,7 +27,8 @@ export class RegisterComponent implements OnInit {
   register() {
     this.authenticateService.register(this.registerForm.value)
       .subscribe(response => {
-        sessionStorage.setItem('access_token', response.token);
+        setToken(response.token);
+        this.router.navigate(['/hello']);
       });
   }
 }
