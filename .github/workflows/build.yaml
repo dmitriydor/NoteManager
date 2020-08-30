@@ -1,0 +1,29 @@
+﻿name: Build Note Manager
+
+on:
+  push:
+    branches: 
+      - master
+      - feature/*
+
+jobs:
+  build:
+    name: Build Asp.net core 3 and Angular 9
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.301
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
+      - name: Npm install
+        run: npm install ../Ui
+      - name: Npm Build
+        run: cd ../Ui && npm run build
