@@ -26,4 +26,4 @@ jobs:
       - name: Npm install
         run: cd ./Ui/note-manager && npm install
       - name: Npm Build
-        run: npm run build
+        run: cd ./Ui/note-manager && npm run build
