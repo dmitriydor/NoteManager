@@ -11,6 +11,7 @@ import { RegisterComponent } from './register/register.component';
 import { AuthenticateService } from './services/authenticate.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HelloComponent } from './hello/hello.component';
+import { httpInterceptorProviders } from './http-interceptors/providers';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,7 @@ import { HelloComponent } from './hello/hello.component';
     ReactiveFormsModule,
     HttpClientModule,
   ],
-  providers: [AuthenticateService],
+  providers: [AuthenticateService, httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
