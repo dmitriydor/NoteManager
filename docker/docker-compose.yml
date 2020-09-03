@@ -19,15 +19,23 @@ services:
       POSTGRES_USER: admin
       POSTGRES_DB: note_manager
     ports:
-    - 5432:5432
+      - 5432:5432
     volumes:
-    - ../docker-data/postgres:/data
+      - ../docker-data/postgres:/data
   
   adminer:
     image: adminer
     restart: always
     ports:
-    - 8080:8080
+      - 8080:8080
     volumes:
-    - ../docker-data/adminer:/data
+      - ../docker-data/adminer:/data
   
+  note-manager:
+    build: ../NoteManager.Api/
+    restart: always
+    ports:
+      - 8001:80
+    depends_on:
+      - database
+    
