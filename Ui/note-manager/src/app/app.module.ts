@@ -12,6 +12,7 @@ import { AuthenticateService } from './services/authenticate.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HelloComponent } from './hello/hello.component';
 import { httpInterceptorProviders } from './http-interceptors/providers';
+import { HomeService } from './services/home.service';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import { httpInterceptorProviders } from './http-interceptors/providers';
     ReactiveFormsModule,
     HttpClientModule,
   ],
-  providers: [AuthenticateService, httpInterceptorProviders],
+  providers: [AuthenticateService, HomeService, httpInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

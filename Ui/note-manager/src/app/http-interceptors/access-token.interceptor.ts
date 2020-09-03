@@ -13,8 +13,8 @@ export class AccessTokenInterceptor implements HttpInterceptor {
 
   constructor() {}
 
-  intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    request.clone({headers: request.headers.set('Authorizatin', `Bearer ${getToken}`)});
-    return next.handle(request);
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const newReq = request.clone({headers: request.headers.set('Authorization', `Bearer ${getToken()}`)});
+    return next.handle(newReq);
   }
 }

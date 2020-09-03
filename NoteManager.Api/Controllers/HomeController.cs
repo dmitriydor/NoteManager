@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace NoteManager.Api.Controllers
 {
     [ApiController]
-    [Route("api/")]
+    [Route("api")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HomeController : ControllerBase
     {
@@ -22,10 +22,10 @@ namespace NoteManager.Api.Controllers
         }
 
         [HttpGet]
-        public String Get()
+        public Boolean Get()
         {
             _logger.LogInformation("Open Home page!");
-            return "Home Page";
+            return true;
         }
     }
 }
