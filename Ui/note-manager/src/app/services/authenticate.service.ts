@@ -25,7 +25,7 @@ export class AuthenticateService {
     return this.httpClient.post<AuthResponse>(this.registerPath, data);
   }
 
-  rereshToken(accessToken: string, refreshToken: string) {
-    return this.httpClient.post<AuthResponse>(this.refreshTokenPath, {accessToken, refreshToken});
+  refreshToken(): Observable<AuthResponse> {
+    return this.httpClient.post<AuthResponse>(this.refreshTokenPath, null);
   }
 }

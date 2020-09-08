@@ -88,30 +88,8 @@ namespace NoteManager.Api.Services
             return await GenerateJwtToken(user);
         }
 
-        public async Task<AuthenticationResult> RefreshTokenAsync(string token, string refreshToken)
+        public async Task<AuthenticationResult> RefreshTokenAsync(string refreshToken)
         {
-            var validatedToken = GetPrincipal(token);
-            if (validatedToken == null)
-            {
-                return new AuthenticationResult
-                {
-                    ErrorMessages = new[] {"Invalid Token"}
-                };
-            }
-
-            var expDateUnix =
-                long.Parse(validatedToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
-            var expDateTimeUtc = DateTime.UnixEpoch.AddSeconds(expDateUnix).Subtract(_jwtOptions.LifeTime);
-
-            if (expDateTimeUtc > DateTime.UtcNow)
-            {
-                return new AuthenticationResult
-                {
-                    ErrorMessages = new[] {"This token has not expired yet"}
-                };
-            }
-
-            var jti = validatedToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
             var storedRefreshToken = await _refreshTokenRepository.GetTokenAsync(refreshToken);
             if (storedRefreshToken == null)
             {
@@ -142,18 +120,9 @@ namespace NoteManager.Api.Services
                     ErrorMessages = new[] {"This refresh token has been used"}
                 };
             }
-
-            if (storedRefreshToken.Jti != jti)
-            {
-                return new AuthenticationResult
-                {
-                    ErrorMessages = new[] {"This refresh token does not match this JWT"}
-                };
-            }
-
             storedRefreshToken.Used = true;
             await _refreshTokenRepository.UpdateTokenAsync(storedRefreshToken);
-            User user = await _userManager.FindByIdAsync(validatedToken.Claims.Single(x => x.Type == "id").Value);
+            User user = await _userManager.FindByIdAsync(storedRefreshToken.UserId);
             return await GenerateJwtToken(user);
         }
 

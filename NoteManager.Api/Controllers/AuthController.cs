@@ -62,7 +62,7 @@ namespace NoteManager.Api.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<AuthResponse> RefreshToken([FromBody] RefreshRequest request)
+        public async Task<AuthResponse> RefreshToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
             if (string.IsNullOrEmpty(refreshToken))
@@ -73,7 +73,7 @@ namespace NoteManager.Api.Controllers
                 };
             }
             var authenticationResult =
-                await _authenticationService.RefreshTokenAsync(request.Token, refreshToken);
+                await _authenticationService.RefreshTokenAsync(refreshToken);
             if (!authenticationResult.IsAuthenticated)
             {
                 return new AuthResponse
