@@ -24,6 +24,7 @@ namespace NoteManager.Api.Controllers
             {
                 return new AuthResponse
                 {
+                    IsAuthenticated = false,
                     ErrorMessages = ModelState.Values.SelectMany(x => x.Errors.Select(err => err.ErrorMessage))
                 };
             }
@@ -33,13 +34,15 @@ namespace NoteManager.Api.Controllers
             {
                 return new AuthResponse
                 {
+                    IsAuthenticated = false,
                     ErrorMessages = authenticationResult.ErrorMessages
                 };
             }
             _authenticationService.SetRefreshTokenInCookie(authenticationResult.RefreshToken, HttpContext);
             return new AuthResponse
             {
-                Token = authenticationResult.Token,
+                IsAuthenticated = authenticationResult.IsAuthenticated,
+                AccessToken = authenticationResult.Token
             };
         }
 
@@ -51,40 +54,46 @@ namespace NoteManager.Api.Controllers
             {
                 return new AuthResponse
                 {
+                    IsAuthenticated = false,
                     ErrorMessages = authenticationResult.ErrorMessages
                 };
             }
             _authenticationService.SetRefreshTokenInCookie(authenticationResult.RefreshToken, HttpContext);
             return new AuthResponse
             {
-                Token = authenticationResult.Token,
+                IsAuthenticated = authenticationResult.IsAuthenticated,
+                AccessToken = authenticationResult.Token
             };
         }
 
         [HttpPost("refresh-token")]
         public async Task<AuthResponse> RefreshToken()
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].FirstOrDefault(_ => true);
             var refreshToken = Request.Cookies["refreshToken"];
             if (string.IsNullOrEmpty(refreshToken))
             {
                 return new AuthResponse
                 {
+                    IsAuthenticated = false,
                     ErrorMessages = new []{"Refresh Token not found!"}
                 };
             }
             var authenticationResult =
-                await _authenticationService.RefreshTokenAsync(refreshToken);
+                await _authenticationService.RefreshTokenAsync(accessToken, refreshToken);
             if (!authenticationResult.IsAuthenticated)
             {
                 return new AuthResponse
                 {
+                    IsAuthenticated = false,
                     ErrorMessages = authenticationResult.ErrorMessages
                 };
             }
             _authenticationService.SetRefreshTokenInCookie(authenticationResult.RefreshToken, HttpContext);
             return new AuthResponse
             {
-                Token = authenticationResult.Token,
+                IsAuthenticated = authenticationResult.IsAuthenticated,
+                AccessToken = authenticationResult.Token
             };
         }
     }

@@ -88,8 +88,29 @@ namespace NoteManager.Api.Services
             return await GenerateJwtToken(user);
         }
 
-        public async Task<AuthenticationResult> RefreshTokenAsync(string refreshToken)
+        public async Task<AuthenticationResult> RefreshTokenAsync(string accessToken, string refreshToken)
         {
+            var validatedToken = GetPrincipal(accessToken);	
+            if (validatedToken == null)	
+            {	
+                return new AuthenticationResult	
+                {	
+                    ErrorMessages = new[] {"Invalid Token"}	
+                };	
+            }	
+
+            var expDateUnix =	
+                long.Parse(validatedToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Exp).Value);	
+            var expDateTimeUtc = DateTime.UnixEpoch.AddSeconds(expDateUnix).Subtract(_jwtOptions.LifeTime);	
+
+            if (expDateTimeUtc > DateTime.UtcNow)	
+            {	
+                return new AuthenticationResult	
+                {	
+                    ErrorMessages = new[] {"This token has not expired yet"}	
+                };	
+            }
+            var jti = validatedToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
             var storedRefreshToken = await _refreshTokenRepository.GetTokenAsync(refreshToken);
             if (storedRefreshToken == null)
             {
@@ -120,9 +141,18 @@ namespace NoteManager.Api.Services
                     ErrorMessages = new[] {"This refresh token has been used"}
                 };
             }
+            
+            if (storedRefreshToken.Jti != jti)	
+            {	
+                return new AuthenticationResult	
+                {	
+                    ErrorMessages = new[] {"This refresh token does not match this JWT"}	
+                };	
+            }	
+
             storedRefreshToken.Used = true;
             await _refreshTokenRepository.UpdateTokenAsync(storedRefreshToken);
-            User user = await _userManager.FindByIdAsync(storedRefreshToken.UserId);
+            User user = await _userManager.FindByIdAsync(validatedToken.Claims.Single(x => x.Type == "id").Value);
             return await GenerateJwtToken(user);
         }
 
@@ -132,11 +162,24 @@ namespace NoteManager.Api.Services
             {
                 HttpOnly = true,
                 Secure = true,
-                Expires = refreshToken.ExpiryDate
+                Expires = refreshToken.ExpiryDate,
+                Path = "api/authenticate"
             };
             context.Response.Cookies.Append("refresh_token", refreshToken.Token, cookieOptions);
         }
-        
+
+        // для харанения в cookie 
+        public void SetAccessTokenInCookie(string accessToken, HttpContext context)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict
+            };
+            context.Response.Cookies.Append("access_token", accessToken, cookieOptions);
+        }
+
         private ClaimsPrincipal GetPrincipal(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

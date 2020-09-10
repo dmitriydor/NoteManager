@@ -8,7 +8,8 @@ namespace NoteManager.Api.Services
     {
         Task<AuthenticationResult> RegistrationAsync(string email, string password, string firstName, string lastName);
         Task<AuthenticationResult> LoginAsync(string email, string password);
-        Task<AuthenticationResult> RefreshTokenAsync(string refreshToken);
+        Task<AuthenticationResult> RefreshTokenAsync(string accessToken, string refreshToken);
         void SetRefreshTokenInCookie(RefreshToken refreshToken, HttpContext context);
+        void SetAccessTokenInCookie(string accessToken, HttpContext context);
     }
 }
