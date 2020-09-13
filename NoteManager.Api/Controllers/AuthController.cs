@@ -69,8 +69,10 @@ namespace NoteManager.Api.Controllers
         [HttpPost("refresh-token")]
         public async Task<AuthResponse> RefreshToken()
         {
-            var accessToken = HttpContext.Request.Headers["Authorization"].FirstOrDefault(_ => true);
-            var refreshToken = Request.Cookies["refreshToken"];
+            var accessToken = HttpContext.Request.Headers["Authorization"]
+                .FirstOrDefault(_ => true)?
+                .Split(' ')[1];
+            var refreshToken = Request.Cookies["refresh_token"];
             if (string.IsNullOrEmpty(refreshToken))
             {
                 return new AuthResponse

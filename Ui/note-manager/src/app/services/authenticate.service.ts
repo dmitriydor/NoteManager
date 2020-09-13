@@ -23,7 +23,7 @@ export class AuthenticateService {
       .pipe(
         tap(response => {
           if (response.isAuthenticated) {
-            sessionStorage.setItem('access_token', response.accessToken);
+            this.setAccessToken(response.accessToken);
           }
         })
       );
@@ -33,7 +33,7 @@ export class AuthenticateService {
     return this.httpClient.post<AuthResponse>(this.registerPath, data).pipe(
       tap(response => {
         if (response.isAuthenticated) {
-          sessionStorage.setItem('access_token', response.accessToken);
+          this.setAccessToken(response.accessToken);
         }
       })
     );
@@ -43,7 +43,7 @@ export class AuthenticateService {
     return this.httpClient.post<AuthResponse>(this.refreshTokenPath, null).pipe(
       tap(response => {
         if (response.isAuthenticated) {
-          sessionStorage.setItem('access_token', response.accessToken);
+          this.setAccessToken(response.accessToken);
         }
       })
     );
@@ -53,8 +53,12 @@ export class AuthenticateService {
     return sessionStorage.getItem('access_token');
   }
 
+  setAccessToken(accessToken: string) {
+    sessionStorage.removeItem('access_token');
+    sessionStorage.setItem('access_token', accessToken);
+  }
+
   isAuthenticated(): boolean {
-    const accessToken = sessionStorage.getItem('access_token');
-    return !!accessToken;
+    return !!this.getAccessToken();
   }
 }
