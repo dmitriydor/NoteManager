@@ -33,5 +33,11 @@ namespace NoteManager.Api.Data.Repositories
             await _context.SaveChangesAsync();
             return result;
         }
+
+        public async Task DeleteNotes(params Note[] notes)
+        {
+            _context.Notes.RemoveRange(notes);
+            await _context.SaveChangesAsync();
+        }
     }
 }

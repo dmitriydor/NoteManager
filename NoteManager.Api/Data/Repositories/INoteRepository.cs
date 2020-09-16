@@ -10,5 +10,6 @@ namespace NoteManager.Api.Data.Repositories
         Task<Note> GetNoteById(Guid id);
         Task<List<Note>> GetNotesByUserId(string userId);
         Task<Note> UpsertNote(Note note);
+        Task DeleteNotes(params Note[] notes);
     }
 }
