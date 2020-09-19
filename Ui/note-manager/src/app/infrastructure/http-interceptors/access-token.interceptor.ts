@@ -3,7 +3,7 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest}
 import {EMPTY, Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {AuthenticateService} from '../services/authenticate.service';
+import {AuthenticateService} from '../../services/authenticate.service';
 
 @Injectable()
 export class AccessTokenInterceptor implements HttpInterceptor {
