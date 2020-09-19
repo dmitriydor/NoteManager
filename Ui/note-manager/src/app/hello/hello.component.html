@@ -1,3 +1,10 @@
-<div *ngIf="loaded$ | async">
-  <h1>Note <span>Manager</span>.</h1>
+<div class="container">
+  <div class="title">
+    <h1>Note <span>Manager</span></h1>
+    <p>Application for creating and managing notes</p>
+  </div>
+  <div class="actions">
+    <button d-button (click)="register()">Sing Up</button>
+    <button d-button (click)="login()">Sign In</button>
+  </div>
 </div>

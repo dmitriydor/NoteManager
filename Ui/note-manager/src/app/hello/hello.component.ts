@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {HomeService} from '../services/home.service';
-import {Observable} from 'rxjs';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-hello',
@@ -9,12 +8,16 @@ import {Observable} from 'rxjs';
 })
 export class HelloComponent implements OnInit {
 
-  loaded$: Observable<boolean>;
-  constructor(private homeService: HomeService) {
-    this.loaded$ = this.homeService.get();
-  }
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
   }
 
+  login() {
+    this.router.navigate(['/login']);
+  }
+
+  register() {
+    this.router.navigate(['/register']);
+  }
 }
