@@ -1,0 +1,74 @@
+@import "../../../assets/colors"
+
+.nav
+  height: 100%
+  display: flex
+
+.nav-expanded
+  height: 100%
+  width: 50px
+  background-color: $primary
+
+.nav-container
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+  padding: 5px
+  height: 100%
+
+.nav-seporator
+  background-color: rgba(0,0,0,0.2)
+  height: 1px
+  margin-bottom: 10px
+
+.nav-item
+  display: flex
+  align-items: center
+  margin-bottom: 10px
+  height: 40px
+  width: 100%
+
+.nav-item.profile
+  background-color: rgba(255,255,255, 0.5)
+
+.nav-item:last-of-type
+  margin-bottom: 0
+
+.nav-not-expanded
+  height: 100%
+  width: 200px
+  background-color: $primary-1
+
+.nav-item span
+  font-size: 19px
+  margin-left: 10px
+
+.nav-expander
+  height: 100%
+  display: flex
+  flex-direction: column
+  justify-content: center
+
+.expander-container
+  display: flex
+  align-items: center
+  justify-content: center
+  width: 15px
+  height: 30px
+  cursor: pointer
+
+.expander-container:hover
+  background-color: rgba(255,255,255,0.5)
+
+.expander
+  width: 10px
+  height: 10px
+  transform: rotate(45deg)
+
+.expander.not-activ
+  border-top: 2px solid $primary
+  border-right: 2px solid $primary
+
+.expander.activ
+  border-bottom: 2px solid $primary
+  border-left: 2px solid $primary

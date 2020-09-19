@@ -12,6 +12,7 @@ import { AuthenticateService } from './services/authenticate.service';
 import { HttpClientModule } from '@angular/common/http';
 import { HelloComponent } from './components/hello/hello.component';
 import { httpInterceptorProviders } from './infrastructure/http-interceptors/providers';
+import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { httpInterceptorProviders } from './infrastructure/http-interceptors/pro
     DButtonDirective,
     DInputDirective,
     RegisterComponent,
-    HelloComponent
+    HelloComponent,
+    NavMenuComponent
   ],
   imports: [
     BrowserModule,
