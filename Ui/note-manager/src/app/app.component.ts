@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,16 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'note-manager';
+
+  public constructor(private router: Router) {
+  }
+
+  visible(): boolean {
+    switch (this.router.url) {
+      case '/login':
+      case '/register':
+      case '/hello': return false;
+    }
+    return true;
+  }
 }

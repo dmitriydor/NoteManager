@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
-  selector: 'app-nav-menu',
+  selector: 'nav-menu',
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.sass']
 })
