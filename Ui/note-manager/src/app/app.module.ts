@@ -13,6 +13,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { HelloComponent } from './components/hello/hello.component';
 import { httpInterceptorProviders } from './infrastructure/http-interceptors/providers';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
+import { NotesComponent } from './components/notes/notes.component';
+import { PageComponent } from './components/page/page.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
     DInputDirective,
     RegisterComponent,
     HelloComponent,
-    NavMenuComponent
+    NavMenuComponent,
+    NotesComponent,
+    PageComponent
   ],
   imports: [
     BrowserModule,
