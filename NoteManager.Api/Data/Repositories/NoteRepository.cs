@@ -16,17 +16,17 @@ namespace NoteManager.Api.Data.Repositories
             _context = context;
         }
         
-        public async Task<Note> GetNoteById(Guid id)
+        public async Task<Note> GetNoteByIdAsync(Guid id)
         {
             return await _context.Notes.SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<List<Note>> GetNotesByUserId(string userId)
+        public async Task<List<Note>> GetNotesByUserIdAsync(string userId)
         {
             return await _context.Notes.Where(x => x.UserId == userId).ToListAsync();
         }
 
-        public async Task<Note> UpsertNote(Note note)
+        public async Task<Note> UpsertNoteAsync(Note note)
         {
             var storedNote = await _context.Notes.SingleOrDefaultAsync(x => x.Id == note.Id);
             var result = storedNote == null ? (await _context.Notes.AddAsync(note)).Entity : _context.Notes.Update(note).Entity;
@@ -34,7 +34,7 @@ namespace NoteManager.Api.Data.Repositories
             return result;
         }
 
-        public async Task DeleteNotes(params Note[] notes)
+        public async Task DeleteNotesAsync(params Note[] notes)
         {
             _context.Notes.RemoveRange(notes);
             await _context.SaveChangesAsync();

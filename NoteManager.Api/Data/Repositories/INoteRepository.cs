@@ -7,9 +7,9 @@ namespace NoteManager.Api.Data.Repositories
 {
     public interface INoteRepository
     {
-        Task<Note> GetNoteById(Guid id);
-        Task<List<Note>> GetNotesByUserId(string userId);
-        Task<Note> UpsertNote(Note note);
-        Task DeleteNotes(params Note[] notes);
+        Task<Note> GetNoteByIdAsync(Guid id);
+        Task<List<Note>> GetNotesByUserIdAsync(string userId);
+        Task<Note> UpsertNoteAsync(Note note);
+        Task DeleteNotesAsync(params Note[] notes);
     }
 }

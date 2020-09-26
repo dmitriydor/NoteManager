@@ -26,7 +26,7 @@ export class RegisterComponent implements OnInit {
   register() {
     this.authenticateService.register(this.registerForm.value)
       .subscribe(response => {
-        this.router.navigate(['/hello']);
+        this.router.navigate(['/notes']);
       });
   }
 }
