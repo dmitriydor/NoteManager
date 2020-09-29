@@ -16,7 +16,6 @@ namespace NoteManager.Api.Infrastructure.Extensions
             services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
-            services.Configure<SwaggerOptions>(configuration.GetSection("SwaggerOptions"));
             
             var jwtOptions = new JwtOptions();
             configuration.Bind(nameof(jwtOptions), jwtOptions);

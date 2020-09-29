@@ -16,7 +16,7 @@ namespace NoteManager.Api
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
         
         public void ConfigureServices(IServiceCollection services)
         {
@@ -34,7 +34,7 @@ namespace NoteManager.Api
             services.AddControllers();
             
             //swagger
-            services.AddSwagger();
+            services.AddSwagger(Configuration);
             
             //automapper
             services.AddAutoMapper(typeof(Startup));

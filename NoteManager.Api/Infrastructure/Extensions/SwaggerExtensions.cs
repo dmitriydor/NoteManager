@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -9,8 +10,10 @@ namespace NoteManager.Api.Infrastructure.Extensions
 {
     public static class SwaggerExtensions
     {
-        public static IServiceCollection AddSwagger(this IServiceCollection services)
+        public static IServiceCollection AddSwagger(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<SwaggerOptions>(configuration.GetSection("SwaggerOptions"));
+
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("note_manager", new OpenApiInfo {Title = "Note Manager API", Version = "v1"});
