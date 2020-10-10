@@ -156,7 +156,7 @@ namespace NoteManager.Api.Services
             return await GenerateJwtToken(user);
         }
 
-        public void SetRefreshTokenInCookie(RefreshToken refreshToken, HttpContext context)
+        public async Task SetRefreshTokenInCookie(RefreshToken refreshToken, HttpContext context)
         {
             var cookieOptions = new CookieOptions
             {
@@ -165,11 +165,11 @@ namespace NoteManager.Api.Services
                 Expires = refreshToken.ExpiryDate,
                 Path = "api/authenticate"
             };
-            context.Response.Cookies.Append("refresh_token", refreshToken.Token, cookieOptions);
+            await Task.Run(() => context.Response.Cookies.Append("refresh_token", refreshToken.Token, cookieOptions));
         }
 
         // для харанения в cookie 
-        public void SetAccessTokenInCookie(string accessToken, HttpContext context)
+        public async Task SetAccessTokenInCookie(string accessToken, HttpContext context)
         {
             var cookieOptions = new CookieOptions
             {
@@ -177,7 +177,7 @@ namespace NoteManager.Api.Services
                 Secure = true,
                 SameSite = SameSiteMode.Strict
             };
-            context.Response.Cookies.Append("access_token", accessToken, cookieOptions);
+            await Task.Run(() => context.Response.Cookies.Append("access_token", accessToken, cookieOptions));
         }
 
         private ClaimsPrincipal GetPrincipal(string token)

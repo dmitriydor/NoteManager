@@ -38,7 +38,7 @@ namespace NoteManager.Api.Controllers
                     ErrorMessages = authenticationResult.ErrorMessages
                 };
             }
-            _authenticationService.SetRefreshTokenInCookie(authenticationResult.RefreshToken, HttpContext);
+            await _authenticationService.SetRefreshTokenInCookie(authenticationResult.RefreshToken, HttpContext);
             return new AuthResponse
             {
                 IsAuthenticated = authenticationResult.IsAuthenticated,
@@ -58,7 +58,7 @@ namespace NoteManager.Api.Controllers
                     ErrorMessages = authenticationResult.ErrorMessages
                 };
             }
-            _authenticationService.SetRefreshTokenInCookie(authenticationResult.RefreshToken, HttpContext);
+            await _authenticationService.SetRefreshTokenInCookie(authenticationResult.RefreshToken, HttpContext);
             return new AuthResponse
             {
                 IsAuthenticated = authenticationResult.IsAuthenticated,
@@ -91,7 +91,7 @@ namespace NoteManager.Api.Controllers
                     ErrorMessages = authenticationResult.ErrorMessages
                 };
             }
-            _authenticationService.SetRefreshTokenInCookie(authenticationResult.RefreshToken, HttpContext);
+            await _authenticationService.SetRefreshTokenInCookie(authenticationResult.RefreshToken, HttpContext);
             return new AuthResponse
             {
                 IsAuthenticated = authenticationResult.IsAuthenticated,
