@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NoteManager.Api.Data.Repositories;
 using NoteManager.Api.Infrastructure.Extensions;
+using NoteManager.Api.Services;
 
 namespace NoteManager.Api
 {
@@ -22,6 +23,8 @@ namespace NoteManager.Api
         {
             //registration custom services
             services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddTransient<INoteRepository, NoteRepository>();
+            services.AddScoped<INoteService, NoteService>();
             
             //jwt 
             services.AddJwtAuthentication(Configuration);

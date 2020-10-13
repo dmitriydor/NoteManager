@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NoteManager.Api.Data.Repositories;
@@ -22,11 +23,13 @@ namespace NoteManager.Api.Services
         private readonly JwtOptions _jwtOptions;
         private readonly TokenValidationParameters _tokenValidationParameters;
         private readonly IRefreshTokenRepository _refreshTokenRepository;
-        public AuthenticationService(UserManager<User> userManager, IOptions<JwtOptions> jwtOptions, TokenValidationParameters tokenValidationParameters, IRefreshTokenRepository refreshTokenRepository)
+        private readonly ILogger<AuthenticationService> _logger;
+        public AuthenticationService(UserManager<User> userManager, IOptions<JwtOptions> jwtOptions, TokenValidationParameters tokenValidationParameters, IRefreshTokenRepository refreshTokenRepository, ILogger<AuthenticationService> logger)
         {
             _userManager = userManager;
             _tokenValidationParameters = tokenValidationParameters;
             _refreshTokenRepository = refreshTokenRepository;
+            _logger = logger;
             _jwtOptions = jwtOptions.Value;
         }
         public async Task<AuthenticationResult> RegistrationAsync(string email, string password, string firstName, string lastName)
@@ -50,6 +53,8 @@ namespace NoteManager.Api.Services
                 CreatedDate = DateTime.Now
             };
 
+            _logger.LogInformation("Registration User {User}.", newUser);
+
             var createdUser = await _userManager.CreateAsync(newUser, password);
             if (!createdUser.Succeeded)
             {
@@ -59,19 +64,20 @@ namespace NoteManager.Api.Services
                     ErrorMessages = createdUser.Errors.Select(x => x.Description)
                 };
             }
-
+            _logger.LogInformation("User registered successfully.");
             return await GenerateJwtToken(newUser);
         }
 
         public async Task<AuthenticationResult> LoginAsync(string email, string password)
         {
+            _logger.LogInformation("Authorizing {Email}.", email);
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
                 return new AuthenticationResult
                 {
                     IsAuthenticated = false,
-                    ErrorMessages = new[] {"User does not exits"}
+                    ErrorMessages = new[] {"User does not exist"}
                 };
             }
 
@@ -84,12 +90,13 @@ namespace NoteManager.Api.Services
                     ErrorMessages = new[] {"Wrong email or password"}
                 };
             }
-
+            _logger.LogInformation("Authorized {Email}.", email);
             return await GenerateJwtToken(user);
         }
 
         public async Task<AuthenticationResult> RefreshTokenAsync(string accessToken, string refreshToken)
         {
+            _logger.LogInformation("Refreshing access token.");
             var validatedToken = GetPrincipal(accessToken);	
             if (validatedToken == null)	
             {	
@@ -153,11 +160,13 @@ namespace NoteManager.Api.Services
             storedRefreshToken.Used = true;
             await _refreshTokenRepository.UpdateTokenAsync(storedRefreshToken);
             User user = await _userManager.FindByIdAsync(validatedToken.Claims.Single(x => x.Type == "id").Value);
+            _logger.LogInformation("Access token refreshed.");
             return await GenerateJwtToken(user);
         }
 
         public async Task SetRefreshTokenInCookie(RefreshToken refreshToken, HttpContext context)
         {
+            _logger.LogInformation("Setting refresh token in the cookie.");
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
@@ -166,11 +175,13 @@ namespace NoteManager.Api.Services
                 Path = "api/authenticate"
             };
             await Task.Run(() => context.Response.Cookies.Append("refresh_token", refreshToken.Token, cookieOptions));
+            _logger.LogInformation("Refresh token is set.");
         }
 
         // для харанения в cookie 
         public async Task SetAccessTokenInCookie(string accessToken, HttpContext context)
         {
+            _logger.LogInformation("Setting access token in the cookie.");
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
@@ -178,6 +189,7 @@ namespace NoteManager.Api.Services
                 SameSite = SameSiteMode.Strict
             };
             await Task.Run(() => context.Response.Cookies.Append("access_token", accessToken, cookieOptions));
+            _logger.LogInformation("Access token is set.");
         }
 
         private ClaimsPrincipal GetPrincipal(string token)
@@ -204,6 +216,7 @@ namespace NoteManager.Api.Services
         
         private async Task<AuthenticationResult> GenerateJwtToken(User user)
         {
+            _logger.LogInformation("Generating access token for user {User}", user);
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -220,6 +233,7 @@ namespace NoteManager.Api.Services
                     SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
+            _logger.LogInformation("Access token created successfully.");
             return new AuthenticationResult
             {
                 IsAuthenticated = true,
