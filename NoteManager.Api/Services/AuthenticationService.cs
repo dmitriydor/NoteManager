@@ -192,7 +192,7 @@ namespace NoteManager.Api.Services
             _logger.LogInformation("Access token is set.");
         }
 
-        public ClaimsPrincipal GetPrincipal(string token)
+        private ClaimsPrincipal GetPrincipal(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             try

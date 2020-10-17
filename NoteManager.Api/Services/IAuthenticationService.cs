@@ -12,6 +12,5 @@ namespace NoteManager.Api.Services
         Task<AuthenticationResult> RefreshTokenAsync(string accessToken, string refreshToken);
         Task SetRefreshTokenInCookie(RefreshToken refreshToken, HttpContext context);
         Task SetAccessTokenInCookie(string accessToken, HttpContext context);
-        public ClaimsPrincipal GetPrincipal(string token);
     }
 }

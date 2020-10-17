@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,21 +19,17 @@ namespace NoteManager.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
-        private readonly IAuthenticationService _authenticationService;
         private readonly IMapper _mapper;
-        public UserController(UserManager<User> userManager, IAuthenticationService authenticationService, IMapper mapper)
+        public UserController(UserManager<User> userManager, IMapper mapper)
         {
             _userManager = userManager;
-            _authenticationService = authenticationService;
             _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<UserResponse> Get()
         {
-            var accessToken = HttpContext.Request.Headers["Authorization"];
-            var token = accessToken.First().Split(' ')[1];
-            var userId = _authenticationService.GetPrincipal(token).FindFirst("id").Value;
+            var userId = HttpContext.User.FindFirst("id").Value;
             var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
             return new UserResponse
             {
@@ -40,6 +37,12 @@ namespace NoteManager.Api.Controllers
                 FirstName = user.FirstName,
                 LastName = user.LastName
             };
+        }
+
+        [HttpPost]
+        public async Task UploadImage(IFormFile file)
+        {
+            
         }
         
         //todo: должент быть метод редактирования

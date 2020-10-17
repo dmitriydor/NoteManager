@@ -15,6 +15,7 @@ import { httpInterceptorProviders } from './infrastructure/http-interceptors/pro
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 import { NotesComponent } from './components/notes/notes.component';
 import { PageComponent } from './components/page/page.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { PageComponent } from './components/page/page.component';
     HelloComponent,
     NavMenuComponent,
     NotesComponent,
-    PageComponent
+    PageComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
