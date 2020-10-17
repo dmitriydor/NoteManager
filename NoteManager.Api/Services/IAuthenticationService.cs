@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using NoteManager.Api.Models;
 
@@ -11,5 +12,6 @@ namespace NoteManager.Api.Services
         Task<AuthenticationResult> RefreshTokenAsync(string accessToken, string refreshToken);
         Task SetRefreshTokenInCookie(RefreshToken refreshToken, HttpContext context);
         Task SetAccessTokenInCookie(string accessToken, HttpContext context);
+        public ClaimsPrincipal GetPrincipal(string token);
     }
 }

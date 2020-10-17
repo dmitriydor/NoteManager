@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Moq;
 using NoteManager.Api.Contracts.Requests;
 using NoteManager.Api.Controllers;
@@ -11,12 +10,12 @@ namespace NoteManager.Tests.Controllers
     [TestFixture]
     public class AuthControllerTests
     {
-        private readonly Mock<IAuthenticationService> authService = new Mock<IAuthenticationService>();
+        private readonly Mock<IAuthenticationService> _authService = new Mock<IAuthenticationService>();
 
         [Test]
         public async Task Registration_Register_Registered()
         {
-            var controller = new AuthController(authService.Object);
+            var controller = new AuthController(_authService.Object);
             var regRequest = new RegistrationRequest
             {
                 Email = "example@example.com",
@@ -25,7 +24,7 @@ namespace NoteManager.Tests.Controllers
                 Password = "Password"
             };
 
-            authService.Setup(x => x.RegistrationAsync(regRequest.Email, regRequest.Password, regRequest.FirstName, regRequest.LastName))
+            _authService.Setup(x => x.RegistrationAsync(regRequest.Email, regRequest.Password, regRequest.FirstName, regRequest.LastName))
                 .ReturnsAsync(new Api.Models.AuthenticationResult
                 {
                     IsAuthenticated = true

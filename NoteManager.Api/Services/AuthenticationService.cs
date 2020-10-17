@@ -192,7 +192,7 @@ namespace NoteManager.Api.Services
             _logger.LogInformation("Access token is set.");
         }
 
-        private ClaimsPrincipal GetPrincipal(string token)
+        public ClaimsPrincipal GetPrincipal(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             try
@@ -209,7 +209,7 @@ namespace NoteManager.Api.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e.Message, e);
                 return null;
             }
         }
