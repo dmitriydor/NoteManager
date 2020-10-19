@@ -1,2 +1,13 @@
 <nav-menu *ngIf="visible()"></nav-menu>
-<router-outlet></router-outlet>
+
+<ng-container *ngTemplateOutlet="visible()? page: invisible_page"></ng-container>
+
+<ng-template #page>
+  <d-page [title] = >
+    <router-outlet></router-outlet>
+  </d-page>
+</ng-template>
+
+<ng-template #invisible_page>
+  <router-outlet></router-outlet>
+</ng-template>

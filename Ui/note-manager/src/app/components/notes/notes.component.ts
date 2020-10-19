@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-notes',
+  selector: 'notes',
   templateUrl: './notes.component.html',
   styleUrls: ['./notes.component.sass']
 })

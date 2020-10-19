@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'd-page',
@@ -7,9 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PageComponent implements OnInit {
 
+  title: string;
   constructor() { }
 
   ngOnInit(): void {
+    // todo: пределение заголовка из маршрута.
   }
 
 }

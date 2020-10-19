@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {UserService} from '../../services/user.service';
-import {UserResponse} from "../../models/user.response";
+import {UserResponse} from '../../models/user.response';
 
 @Component({
   selector: 'nav-menu',
@@ -11,7 +11,6 @@ import {UserResponse} from "../../models/user.response";
 export class NavMenuComponent implements OnInit {
 
   expand$ = new BehaviorSubject<boolean>(false);
-  // @ts-ignore
   user: UserResponse;
 
   constructor(private userService: UserService) { }

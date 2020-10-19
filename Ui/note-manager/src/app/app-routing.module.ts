@@ -5,13 +5,15 @@ import { RegisterComponent } from './components/register/register.component';
 import { HelloComponent } from './components/hello/hello.component';
 import { AuthGuard } from './infrastructure/guards/AuthGuard';
 import {NotesComponent} from './components/notes/notes.component';
+import {ProfileComponent} from './components/profile/profile.component';
 
 const routes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: 'hello'},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'hello', component: HelloComponent},
-  {path: 'notes', component: NotesComponent, canActivate: [AuthGuard]}
+  {path: 'notes', component: NotesComponent, canActivate: [AuthGuard]},
+  {path: 'profile', component: ProfileComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
