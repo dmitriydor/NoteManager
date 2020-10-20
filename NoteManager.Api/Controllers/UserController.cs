@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -42,7 +43,6 @@ namespace NoteManager.Api.Controllers
         [HttpPost]
         public async Task UploadImage(IFormFile file)
         {
-            
         }
         
         //todo: должент быть метод редактирования

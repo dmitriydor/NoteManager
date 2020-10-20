@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NoteManager.Api.Data.Repositories;
 using NoteManager.Api.Infrastructure.Extensions;
+using NoteManager.Api.Options;
 using NoteManager.Api.Services;
 
 namespace NoteManager.Api
@@ -25,6 +26,7 @@ namespace NoteManager.Api
             services.AddTransient<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddTransient<INoteRepository, NoteRepository>();
             services.AddScoped<INoteService, NoteService>();
+            services.Configure<FileStorageOptions>(Configuration.GetSection("FileStorage"));
             
             //jwt 
             services.AddJwtAuthentication(Configuration);
