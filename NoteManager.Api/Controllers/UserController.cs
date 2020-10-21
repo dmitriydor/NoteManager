@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NoteManager.Api.Contracts.Responses;
 using NoteManager.Api.Models;
-using NoteManager.Api.Services;
 
 namespace NoteManager.Api.Controllers
 {
@@ -41,8 +39,9 @@ namespace NoteManager.Api.Controllers
         }
 
         [HttpPost]
-        public async Task UploadImage(IFormFile file)
+        public Task UploadImage(IFormFile file)
         {
+            throw new NotImplementedException();
         }
         
         //todo: должент быть метод редактирования

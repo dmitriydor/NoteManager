@@ -10,5 +10,6 @@ namespace NoteManager.Api.Data
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Note> Notes { get; set; }
+        public DbSet<File> Files { get; set; }
     }
 }
