@@ -11,7 +11,7 @@ export class PageComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    // todo: пределение заголовка из маршрута.
+    // todo: определение заголовка из маршрута.
   }
 
 }

@@ -1,10 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NoteManager.Api.Data.Repositories;
 using NoteManager.Api.Data.Storage;
-using NoteManager.Api.Models;
+using File = NoteManager.Api.Models.File;
 
 namespace NoteManager.Api.Services
 {
@@ -20,8 +21,10 @@ namespace NoteManager.Api.Services
             _fileRepository = fileRepository;
             _logger = logger;
         }
-        public async Task<File> SaveFileAsync(IFormFile file, Guid userId)
+        public async Task<File> SaveFileAsync(IFormFile file, string userId)
         {
+            //todo: валидация файла
+            _logger.LogInformation("Uploading File by {UserId}", userId);
             File result;
             var fileModel = CreateFile(file, userId);
             
@@ -55,18 +58,26 @@ namespace NoteManager.Api.Services
             throw new NotImplementedException();
         }
 
-        private string GenerateFileName()
+        private string GenerateFileName(string fileId, string userId)
         {
-            return null;
+            return $"{fileId}-{userId}";
         }
 
-        private File CreateFile(IFormFile file, Guid userId) => new File
+        private File CreateFile(IFormFile file, string userId)
         {
-            CreationDate = DateTime.UtcNow.Date,
-            Name = GenerateFileName(),
-            Size = file.Length,
-            Format = file.ContentType,
-            UserId = userId,
-        };
+            var id = Guid.NewGuid();
+            var fileName = GenerateFileName(id.ToString(), userId);
+
+            return new File
+            {
+                Id = id,
+                CreationDate = DateTime.UtcNow.Date,
+                Name = fileName,
+                Size = file.Length,
+                Format = Path.GetExtension(file.FileName),
+                ContentType = file.ContentType,
+                UserId = userId,
+            };
+        }
     }
 }

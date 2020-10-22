@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NoteManager.Api.Contracts.Responses;
 using NoteManager.Api.Models;
+using NoteManager.Api.Services;
 
 namespace NoteManager.Api.Controllers
 {
@@ -17,12 +18,14 @@ namespace NoteManager.Api.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserController : ControllerBase
     {
+        private readonly IFileService _fileService;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
-        public UserController(UserManager<User> userManager, IMapper mapper)
+        public UserController(UserManager<User> userManager, IMapper mapper, IFileService fileService)
         {
             _userManager = userManager;
             _mapper = mapper;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -39,9 +42,10 @@ namespace NoteManager.Api.Controllers
         }
 
         [HttpPost]
-        public Task UploadImage(IFormFile file)
+        public async Task UploadImage(IFormFile file)
         {
-            throw new NotImplementedException();
+            var userId = HttpContext.User.FindFirst("id").Value;
+            await _fileService.SaveFileAsync(file, userId);
         }
         
         //todo: должент быть метод редактирования
