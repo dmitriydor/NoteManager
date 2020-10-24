@@ -41,7 +41,7 @@ namespace NoteManager.Api.Controllers
             };
         }
 
-        [HttpPost]
+        [HttpPost("profile-image")]
         public async Task UploadImage(IFormFile file)
         {
             var userId = HttpContext.User.FindFirst("id").Value;

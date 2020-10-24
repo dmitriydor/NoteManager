@@ -3,49 +3,66 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NoteManager.Api.Data.Repositories;
 using NoteManager.Api.Data.Storage;
 using File = NoteManager.Api.Models.File;
+using FileOptions = NoteManager.Api.Options.FileOptions;
 
 namespace NoteManager.Api.Services
 {
     public class FileService : IFileService
     {
+        private readonly FileOptions _fileOptions;
         private readonly IFileStorage _fileStorage;
         private readonly IFileRepository _fileRepository;
         private readonly ILogger<FileService> _logger;
         
-        public FileService(IFileStorage fileStorage, IFileRepository fileRepository, ILogger<FileService> logger)
+        public FileService(IFileStorage fileStorage, IFileRepository fileRepository, ILogger<FileService> logger, IOptions<FileOptions> fileOptions)
         {
             _fileStorage = fileStorage;
             _fileRepository = fileRepository;
             _logger = logger;
+            _fileOptions = fileOptions.Value;
         }
         public async Task<File> SaveFileAsync(IFormFile file, string userId)
         {
-            //todo: валидация файла
             _logger.LogInformation("Uploading File by {UserId}", userId);
             File result;
-            var fileModel = CreateFile(file, userId);
-            
             try
             {
-                result = await _fileRepository.InsertAsync(fileModel, false);
+                if (file.Length > _fileOptions.MaxSize)
+                {
+                    throw new Exception(message:$"File size greater than {_fileOptions.MaxSize}", new FileLoadException());
+                }
+
+                if (!_fileOptions.AllowedFormats.Contains(Path.GetExtension(file.FileName)))
+                {
+                    throw new Exception($"Invalid image format. Supported {_fileOptions.AllowedFormats}");
+                }
+                
+                var entryFile = await _fileRepository.GetByUserIdAsync(userId);
+                var fileModel = new File();
+                if (entryFile == null)
+                {
+                    FillFile(ref fileModel, file, userId);
+                    result = await _fileRepository.InsertAsync(fileModel, false);
+                }
+                else
+                {
+                    FillFile(ref entryFile, file, userId);
+                    result = await _fileRepository.UpdateAsync(entryFile);
+                }
                 await _fileStorage.SaveFileAsync(file, result);
                 await _fileRepository.CommitChanges();
             }
             catch (Exception e)
             {
-                _logger.LogError("Error while writing file", e);
+                _logger.LogError($"Error while writing file. {e.Message}", e);
                 throw;
             }
-
+            _logger.LogInformation("File uploaded");
             return result;
-        }
-
-        public Task<bool> UpdateFileAsync(IFormFile file, Guid fileId)
-        {
-            throw new NotImplementedException();
         }
 
         public Task<bool> DeleteFileAsync(Guid id)
@@ -58,26 +75,15 @@ namespace NoteManager.Api.Services
             throw new NotImplementedException();
         }
 
-        private string GenerateFileName(string fileId, string userId)
-        {
-            return $"{fileId}-{userId}";
-        }
 
-        private File CreateFile(IFormFile file, string userId)
+        private void FillFile(ref File fileModel, IFormFile file, string userId)
         {
-            var id = Guid.NewGuid();
-            var fileName = GenerateFileName(id.ToString(), userId);
-
-            return new File
-            {
-                Id = id,
-                CreationDate = DateTime.UtcNow.Date,
-                Name = fileName,
-                Size = file.Length,
-                Format = Path.GetExtension(file.FileName),
-                ContentType = file.ContentType,
-                UserId = userId,
-            };
+            fileModel.CreationDate = DateTime.UtcNow.Date;
+            fileModel.Name ??= Path.GetRandomFileName();
+            fileModel.Size = file.Length;
+            fileModel.Format = Path.GetExtension(file.FileName);
+            fileModel.ContentType = file.ContentType;
+            fileModel.UserId = userId;
         }
     }
 }

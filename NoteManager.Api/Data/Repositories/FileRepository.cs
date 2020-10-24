@@ -19,7 +19,7 @@ namespace NoteManager.Api.Data.Repositories
             return await _dbContext.Files.FirstOrDefaultAsync(x => x.Id == fileId);
         }
 
-        public async Task<File> GetByUserId(string userId)
+        public async Task<File> GetByUserIdAsync(string userId)
         {
             return await _dbContext.Files.FirstOrDefaultAsync(x => x.UserId == userId);
         }
