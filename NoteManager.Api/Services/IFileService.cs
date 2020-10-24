@@ -8,7 +8,7 @@ namespace NoteManager.Api.Services
     public interface IFileService
     {
         Task<File> SaveFileAsync(IFormFile file, string userId);
-        Task<bool> DeleteFileAsync(Guid id);
-        Task<IFormFile> GetFileAsync(Guid id);
+        Task DeleteFileAsync(string userId);
+        Task<File> GetFileAsync(string userId);
     }
 }

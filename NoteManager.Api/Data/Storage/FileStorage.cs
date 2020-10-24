@@ -28,14 +28,12 @@ namespace NoteManager.Api.Data.Storage
             await formFile.CopyToAsync(stream);
         }
 
-        public IFormFile GetFile(string fileName)
+        public Task DeleteFileAsync(File file)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public bool UpdateFile(IFormFile file, string fileName)
-        {
-            throw new System.NotImplementedException();
+            return Task.Run(() =>
+            {
+                System.IO.File.Delete(Path.Combine(_fileOptions.DirectoryPath, $"{file.Name}{file.Format}"));
+            });
         }
     }
 }

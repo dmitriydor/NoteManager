@@ -25,6 +25,8 @@ namespace NoteManager.Api.Services
             _logger = logger;
             _fileOptions = fileOptions.Value;
         }
+        
+        //todo: переделать на контракты для UI
         public async Task<File> SaveFileAsync(IFormFile file, string userId)
         {
             _logger.LogInformation("Uploading File by {UserId}", userId);
@@ -65,14 +67,31 @@ namespace NoteManager.Api.Services
             return result;
         }
 
-        public Task<bool> DeleteFileAsync(Guid id)
+        //todo: переделать на контракты для UI
+        public async Task DeleteFileAsync(string userId)
         {
-            throw new NotImplementedException();
+            var file = await _fileRepository.GetByUserIdAsync(userId);
+            if (file == null)
+            {
+                throw new FileNotFoundException();
+            }
+            try
+            {
+                await _fileRepository.DeleteAsync(file);
+                await _fileStorage.DeleteFileAsync(file);
+                await _fileRepository.CommitChanges();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Deleting file error");
+                throw;
+            }
         }
 
-        public Task<IFormFile> GetFileAsync(Guid id)
+        //todo: переделать на контракты для UI
+        public async Task<File> GetFileAsync(string userId)
         {
-            throw new NotImplementedException();
+            return await _fileRepository.GetByUserIdAsync(userId);
         }
 
 
