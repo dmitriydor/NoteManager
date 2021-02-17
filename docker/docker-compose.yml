@@ -1,16 +1,6 @@
 ﻿version: '3.7'
 
 services:
-  seq:
-    image: datalust/seq:5.1
-    container_name: seq
-    environment:
-      - ACCEPT_EULA=Y
-    ports:
-      - 5341:5341
-    volumes:
-      - ../docker-data/seq:/data
-
   database:
     image: postgres
     restart: always
@@ -21,21 +11,4 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ../docker-data/postgres:/data
-  
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-    volumes:
-      - ../docker-data/adminer:/data
-  
-  note-manager:
-    build: ../NoteManager.Api/
-    restart: always
-    ports:
-      - 8001:80
-    depends_on:
-      - database
-    
+      - ../docker-data/postgres:/data 

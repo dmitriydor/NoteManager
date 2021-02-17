@@ -15,7 +15,7 @@ namespace NoteManager.Api.Data.Repositories
         {
             _context = context;
         }
-        
+
         public async Task<Note> GetNoteByIdAsync(Guid id)
         {
             return await _context.Notes.SingleOrDefaultAsync(x => x.Id == id);
@@ -29,7 +29,9 @@ namespace NoteManager.Api.Data.Repositories
         public async Task<Note> UpsertNoteAsync(Note note)
         {
             var storedNote = await _context.Notes.SingleOrDefaultAsync(x => x.Id == note.Id);
-            var result = storedNote == null ? (await _context.Notes.AddAsync(note)).Entity : _context.Notes.Update(note).Entity;
+            var result = storedNote == null
+                ? (await _context.Notes.AddAsync(note)).Entity
+                : _context.Notes.Update(note).Entity;
             await _context.SaveChangesAsync();
             return result;
         }

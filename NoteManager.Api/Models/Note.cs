@@ -9,7 +9,7 @@ namespace NoteManager.Api.Models
         public string Title { get; set; }
         public string Body { get; set; }
         public string UserId { get; set; }
-        [ForeignKey(nameof(UserId))]
-        public User User { get; set; }
+
+        [ForeignKey(nameof(UserId))] public User User { get; set; }
     }
 }

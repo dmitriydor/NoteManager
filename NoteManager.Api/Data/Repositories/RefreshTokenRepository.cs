@@ -14,7 +14,7 @@ namespace NoteManager.Api.Data.Repositories
         {
             _context = context;
         }
-        
+
         public async Task<RefreshToken> GetTokenAsync(string token)
         {
             var refreshToken = await _context.RefreshTokens.SingleOrDefaultAsync(x => x.Token == token);
@@ -26,7 +26,6 @@ namespace NoteManager.Api.Data.Repositories
             var result = _context.RefreshTokens.Update(token);
             await _context.SaveChangesAsync();
             return result.Entity;
-
         }
 
         public async Task<RefreshToken> CreateTokenAsync(SecurityToken token, User user)

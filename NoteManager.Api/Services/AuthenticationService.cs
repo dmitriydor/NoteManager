@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,12 +17,15 @@ namespace NoteManager.Api.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private readonly UserManager<User> _userManager;
         private readonly JwtOptions _jwtOptions;
-        private readonly TokenValidationParameters _tokenValidationParameters;
-        private readonly IRefreshTokenRepository _refreshTokenRepository;
         private readonly ILogger<AuthenticationService> _logger;
-        public AuthenticationService(UserManager<User> userManager, IOptions<JwtOptions> jwtOptions, TokenValidationParameters tokenValidationParameters, IRefreshTokenRepository refreshTokenRepository, ILogger<AuthenticationService> logger)
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
+        private readonly TokenValidationParameters _tokenValidationParameters;
+        private readonly UserManager<User> _userManager;
+
+        public AuthenticationService(UserManager<User> userManager, IOptions<JwtOptions> jwtOptions,
+            TokenValidationParameters tokenValidationParameters, IRefreshTokenRepository refreshTokenRepository,
+            ILogger<AuthenticationService> logger)
         {
             _userManager = userManager;
             _tokenValidationParameters = tokenValidationParameters;
@@ -32,17 +33,17 @@ namespace NoteManager.Api.Services
             _logger = logger;
             _jwtOptions = jwtOptions.Value;
         }
-        public async Task<AuthenticationResult> RegistrationAsync(string email, string password, string firstName, string lastName)
+
+        public async Task<AuthenticationResult> RegistrationAsync(string email, string password, string firstName,
+            string lastName)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user != null)
-            {
                 return new AuthenticationResult
                 {
                     IsAuthenticated = false,
                     ErrorMessages = new[] {"User with this email already exists"}
                 };
-            }
 
             var newUser = new User
             {
@@ -57,13 +58,11 @@ namespace NoteManager.Api.Services
 
             var createdUser = await _userManager.CreateAsync(newUser, password);
             if (!createdUser.Succeeded)
-            {
                 return new AuthenticationResult
                 {
                     IsAuthenticated = createdUser.Succeeded,
                     ErrorMessages = createdUser.Errors.Select(x => x.Description)
                 };
-            }
             _logger.LogInformation("User registered successfully.");
             return await GenerateJwtToken(newUser);
         }
@@ -73,23 +72,19 @@ namespace NoteManager.Api.Services
             _logger.LogInformation("Authorizing {Email}.", email);
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
-            {
                 return new AuthenticationResult
                 {
                     IsAuthenticated = false,
                     ErrorMessages = new[] {"User does not exist"}
                 };
-            }
 
             var validPassword = await _userManager.CheckPasswordAsync(user, password);
             if (!validPassword)
-            {
                 return new AuthenticationResult
                 {
                     IsAuthenticated = false,
                     ErrorMessages = new[] {"Wrong email or password"}
                 };
-            }
             _logger.LogInformation("Authorized {Email}.", email);
             return await GenerateJwtToken(user);
         }
@@ -97,69 +92,55 @@ namespace NoteManager.Api.Services
         public async Task<AuthenticationResult> RefreshTokenAsync(string accessToken, string refreshToken)
         {
             _logger.LogInformation("Refreshing access token.");
-            var validatedToken = GetPrincipal(accessToken);	
-            if (validatedToken == null)	
-            {	
-                return new AuthenticationResult	
-                {	
-                    ErrorMessages = new[] {"Invalid Token"}	
-                };	
-            }	
+            var validatedToken = GetPrincipal(accessToken);
+            if (validatedToken == null)
+                return new AuthenticationResult
+                {
+                    ErrorMessages = new[] {"Invalid Token"}
+                };
 
-            var expDateUnix =	
-                long.Parse(validatedToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Exp).Value);	
-            var expDateTimeUtc = DateTime.UnixEpoch.AddSeconds(expDateUnix).Subtract(_jwtOptions.LifeTime);	
+            var expDateUnix =
+                long.Parse(validatedToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
+            var expDateTimeUtc = DateTime.UnixEpoch.AddSeconds(expDateUnix).Subtract(_jwtOptions.LifeTime);
 
-            if (expDateTimeUtc > DateTime.UtcNow)	
-            {	
-                return new AuthenticationResult	
-                {	
-                    ErrorMessages = new[] {"This token has not expired yet"}	
-                };	
-            }
+            if (expDateTimeUtc > DateTime.UtcNow)
+                return new AuthenticationResult
+                {
+                    ErrorMessages = new[] {"This token has not expired yet"}
+                };
             var jti = validatedToken.Claims.Single(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
             var storedRefreshToken = await _refreshTokenRepository.GetTokenAsync(refreshToken);
             if (storedRefreshToken == null)
-            {
                 return new AuthenticationResult
                 {
                     ErrorMessages = new[] {"This refresh token doesn't exist"}
                 };
-            }
 
             if (DateTime.UtcNow > storedRefreshToken.ExpiryDate)
-            {
                 return new AuthenticationResult
                 {
                     ErrorMessages = new[] {"This refresh token has expired"}
                 };
-            }
             if (storedRefreshToken.Invalidated)
-            {
                 return new AuthenticationResult
                 {
                     ErrorMessages = new[] {"This refresh token has been invalidated"}
                 };
-            }
             if (storedRefreshToken.Used)
-            {
                 return new AuthenticationResult
                 {
                     ErrorMessages = new[] {"This refresh token has been used"}
                 };
-            }
-            
-            if (storedRefreshToken.Jti != jti)	
-            {	
-                return new AuthenticationResult	
-                {	
-                    ErrorMessages = new[] {"This refresh token does not match this JWT"}	
-                };	
-            }	
+
+            if (storedRefreshToken.Jti != jti)
+                return new AuthenticationResult
+                {
+                    ErrorMessages = new[] {"This refresh token does not match this JWT"}
+                };
 
             storedRefreshToken.Used = true;
             await _refreshTokenRepository.UpdateTokenAsync(storedRefreshToken);
-            User user = await _userManager.FindByIdAsync(validatedToken.Claims.Single(x => x.Type == "id").Value);
+            var user = await _userManager.FindByIdAsync(validatedToken.Claims.Single(x => x.Type == "id").Value);
             _logger.LogInformation("Access token refreshed.");
             return await GenerateJwtToken(user);
         }
@@ -198,12 +179,10 @@ namespace NoteManager.Api.Services
             try
             {
                 var principal = tokenHandler.ValidateToken(token, _tokenValidationParameters, out var validatedToken);
-                if (!((validatedToken is JwtSecurityToken jwtSecurityToken) &&
+                if (!(validatedToken is JwtSecurityToken jwtSecurityToken &&
                       jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
                           StringComparison.InvariantCultureIgnoreCase)))
-                {
                     return null;
-                }
 
                 return principal;
             }
@@ -213,7 +192,7 @@ namespace NoteManager.Api.Services
                 return null;
             }
         }
-        
+
         private async Task<AuthenticationResult> GenerateJwtToken(User user)
         {
             _logger.LogInformation("Generating access token for user {User}", user);

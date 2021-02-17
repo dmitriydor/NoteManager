@@ -8,8 +8,8 @@ namespace NoteManager.Api.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "RefreshTokens",
-                columns: table => new
+                "RefreshTokens",
+                table => new
                 {
                     Token = table.Column<string>(nullable: false),
                     Jti = table.Column<string>(nullable: true),
@@ -23,23 +23,23 @@ namespace NoteManager.Api.Data.Migrations
                 {
                     table.PrimaryKey("PK_RefreshTokens", x => x.Token);
                     table.ForeignKey(
-                        name: "FK_RefreshTokens_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
+                        "FK_RefreshTokens_Users_UserId",
+                        x => x.UserId,
+                        "Users",
+                        "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_RefreshTokens_UserId",
-                table: "RefreshTokens",
-                column: "UserId");
+                "IX_RefreshTokens_UserId",
+                "RefreshTokens",
+                "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "RefreshTokens");
+                "RefreshTokens");
         }
     }
 }

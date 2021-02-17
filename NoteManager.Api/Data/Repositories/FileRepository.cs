@@ -8,12 +8,12 @@ namespace NoteManager.Api.Data.Repositories
     public class FileRepository : IFileRepository
     {
         private readonly AppDbContext _dbContext;
-        
+
         public FileRepository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
-        
+
         public async Task<File> GetByIdAsync(Guid fileId)
         {
             return await _dbContext.Files.FirstOrDefaultAsync(x => x.Id == fileId);
@@ -27,10 +27,7 @@ namespace NoteManager.Api.Data.Repositories
         public async Task<File> UpdateAsync(File file, bool committed)
         {
             var result = _dbContext.Files.Update(file).Entity;
-            if (committed)
-            {
-                await CommitChanges();
-            }
+            if (committed) await CommitChanges();
 
             return result;
         }
@@ -38,10 +35,7 @@ namespace NoteManager.Api.Data.Repositories
         public async Task<bool> DeleteAsync(File file, bool committed)
         {
             var result = _dbContext.Files.Remove(file).State == EntityState.Deleted;
-            if (committed)
-            {
-                await CommitChanges();
-            }
+            if (committed) await CommitChanges();
 
             return result;
         }
@@ -49,10 +43,7 @@ namespace NoteManager.Api.Data.Repositories
         public async Task<File> InsertAsync(File file, bool committed)
         {
             var result = (await _dbContext.Files.AddAsync(file)).Entity;
-            if (committed)
-            {
-                await CommitChanges();
-            }
+            if (committed) await CommitChanges();
 
             return result;
         }

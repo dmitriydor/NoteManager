@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,7 +11,6 @@ using Microsoft.Extensions.Options;
 using NoteManager.Api.Contracts.Responses;
 using NoteManager.Api.Models;
 using NoteManager.Api.Services;
-using File = NoteManager.Api.Models.File;
 using FileOptions = NoteManager.Api.Options.FileOptions;
 
 namespace NoteManager.Api.Controllers
@@ -22,12 +20,13 @@ namespace NoteManager.Api.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserController : ControllerBase
     {
-        private readonly IFileService _fileService;
-        private readonly UserManager<User> _userManager;
-        private readonly IMapper _mapper;
         private readonly FileOptions _fileOptions;
+        private readonly IFileService _fileService;
+        private readonly IMapper _mapper;
+        private readonly UserManager<User> _userManager;
 
-        public UserController(UserManager<User> userManager, IMapper mapper, IFileService fileService, IOptions<FileOptions> fileOptions)
+        public UserController(UserManager<User> userManager, IMapper mapper, IFileService fileService,
+            IOptions<FileOptions> fileOptions)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -53,7 +52,8 @@ namespace NoteManager.Api.Controllers
         {
             var userId = HttpContext.User.FindFirst("id").Value;
             var result = await _fileService.SaveFileAsync(file, userId);
-            return new FileResponse {Id = result.Id, Path = Path.Combine(_fileOptions.DirectoryPath, $"{result.Name}{result.Format}")};
+            return new FileResponse
+                {Id = result.Id, Path = Path.Combine(_fileOptions.DirectoryPath, $"{result.Name}{result.Format}")};
         }
 
         [HttpGet("profile-image")]
@@ -71,7 +71,7 @@ namespace NoteManager.Api.Controllers
             var userId = HttpContext.User.FindFirst("id").Value;
             await _fileService.DeleteFileAsync(userId);
         }
-        
+
         //todo: должент быть метод редактирования
         //todo: настройка оповещений ( начало события - за 15 мин за 5 мин, истечение срока событий указанных в календаре)
     }

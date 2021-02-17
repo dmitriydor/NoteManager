@@ -9,8 +9,8 @@ namespace NoteManager.Api.Services
 {
     public class NoteService : INoteService
     {
-        private readonly INoteRepository _noteRepository;
         private readonly ILogger<NoteService> _logger;
+        private readonly INoteRepository _noteRepository;
 
         public NoteService(INoteRepository noteRepository, ILogger<NoteService> logger)
         {

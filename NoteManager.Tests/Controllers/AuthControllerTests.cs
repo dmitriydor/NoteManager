@@ -2,6 +2,7 @@
 using Moq;
 using NoteManager.Api.Contracts.Requests;
 using NoteManager.Api.Controllers;
+using NoteManager.Api.Models;
 using NoteManager.Api.Services;
 using NUnit.Framework;
 
@@ -24,8 +25,10 @@ namespace NoteManager.Tests.Controllers
                 Password = "Password"
             };
 
-            _authService.Setup(x => x.RegistrationAsync(regRequest.Email, regRequest.Password, regRequest.FirstName, regRequest.LastName))
-                .ReturnsAsync(new Api.Models.AuthenticationResult
+            _authService.Setup(x =>
+                    x.RegistrationAsync(regRequest.Email, regRequest.Password, regRequest.FirstName,
+                        regRequest.LastName))
+                .ReturnsAsync(new AuthenticationResult
                 {
                     IsAuthenticated = true
                 });

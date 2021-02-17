@@ -19,12 +19,12 @@ namespace NoteManager.Api.Infrastructure.Extensions
                 options.SwaggerDoc("note_manager", new OpenApiInfo {Title = "Note Manager API", Version = "v1"});
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT Authorization header using the bearer scheme", 
+                    Description = "JWT Authorization header using the bearer scheme",
                     Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey, 
+                    Type = SecuritySchemeType.ApiKey,
                     In = ParameterLocation.Header
                 });
-                options.AddSecurityRequirement( new OpenApiSecurityRequirement
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
                         new OpenApiSecurityScheme
@@ -42,17 +42,14 @@ namespace NoteManager.Api.Infrastructure.Extensions
                     }
                 });
             });
-            
+
             return services;
         }
 
         public static IApplicationBuilder UseSwagger(this IApplicationBuilder app)
         {
             var swaggerOptions = app.ApplicationServices.GetService<IOptions<SwaggerOptions>>().Value;
-            app.UseSwagger(options =>
-            {
-                options.RouteTemplate = swaggerOptions.JsonRoute;
-            });
+            app.UseSwagger(options => { options.RouteTemplate = swaggerOptions.JsonRoute; });
             app.UseSwaggerUI(options => options.SwaggerEndpoint(swaggerOptions.Ui, swaggerOptions.Name));
 
             return app;

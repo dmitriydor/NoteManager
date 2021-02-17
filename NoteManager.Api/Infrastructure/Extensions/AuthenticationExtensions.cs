@@ -11,15 +11,16 @@ namespace NoteManager.Api.Infrastructure.Extensions
 {
     public static class AuthenticationExtensions
     {
-        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services,
+            IConfiguration configuration)
         {
             services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
-            
+
             var jwtOptions = new JwtOptions();
             configuration.Bind(nameof(jwtOptions), jwtOptions);
-            
+
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
@@ -30,7 +31,7 @@ namespace NoteManager.Api.Infrastructure.Extensions
                 ClockSkew = TimeSpan.FromSeconds(5)
             };
             services.AddSingleton(tokenValidationParameters);
-            
+
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -42,7 +43,7 @@ namespace NoteManager.Api.Infrastructure.Extensions
                     options.SaveToken = true;
                     options.TokenValidationParameters = tokenValidationParameters;
                 });
-            
+
             return services;
         }
     }

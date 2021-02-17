@@ -9,10 +9,12 @@ namespace NoteManager.Api.Infrastructure.Extensions
 {
     public static class DbExtensions
     {
-        public static IServiceCollection AddDatabaseContext(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddDatabaseContext(this IServiceCollection services,
+            IConfiguration configuration)
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(new NpgsqlConnection(configuration.GetSection("PostgreSql").GetValue<string>("ConnectionString"))));
+                options.UseNpgsql(new NpgsqlConnection(configuration.GetSection("PostgreSql")
+                    .GetValue<string>("ConnectionString"))));
             services.AddIdentityCore<User>().AddEntityFrameworkStores<AppDbContext>();
             return services;
         }

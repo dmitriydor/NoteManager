@@ -16,8 +16,8 @@ namespace NoteManager.Api.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class NotesController : ControllerBase
     {
-        private readonly INoteService _noteService;
         private readonly IMapper _mapper;
+        private readonly INoteService _noteService;
 
         public NotesController(INoteService noteService, IMapper mapper)
         {

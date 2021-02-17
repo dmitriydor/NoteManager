@@ -4,8 +4,8 @@ namespace NoteManager.Api.Contracts.Requests
 {
     public class LoginRequest
     {
-        [EmailAddress]
-        public string Email { get; set; }
+        [EmailAddress] public string Email { get; set; }
+
         public string Password { get; set; }
     }
 }

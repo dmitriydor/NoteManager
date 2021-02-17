@@ -20,7 +20,7 @@ namespace NoteManager.Api
         }
 
         private IConfiguration Configuration { get; }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
             //registration custom services
@@ -31,30 +31,27 @@ namespace NoteManager.Api
             services.AddTransient<IFileStorage, FileStorage>();
             services.AddScoped<INoteService, NoteService>();
             services.AddScoped<IFileService, FileService>();
-            
+
             //jwt 
             services.AddJwtAuthentication(Configuration);
-            
+
             //database
             services.AddDatabaseContext(Configuration);
-            
+
             //cors and controllers
             services.AddCors();
             services.AddControllers();
-            
+
             //swagger
             services.AddSwagger(Configuration);
-            
+
             //automapper
             services.AddAutoMapper(typeof(Startup));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             app.UseSwagger();
             app.UseHttpsRedirection();
@@ -62,10 +59,7 @@ namespace NoteManager.Api
             app.UseCors(cors => cors.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.UseRouting();
             app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

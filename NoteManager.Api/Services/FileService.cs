@@ -14,18 +14,19 @@ namespace NoteManager.Api.Services
     public class FileService : IFileService
     {
         private readonly FileOptions _fileOptions;
-        private readonly IFileStorage _fileStorage;
         private readonly IFileRepository _fileRepository;
+        private readonly IFileStorage _fileStorage;
         private readonly ILogger<FileService> _logger;
-        
-        public FileService(IFileStorage fileStorage, IFileRepository fileRepository, ILogger<FileService> logger, IOptions<FileOptions> fileOptions)
+
+        public FileService(IFileStorage fileStorage, IFileRepository fileRepository, ILogger<FileService> logger,
+            IOptions<FileOptions> fileOptions)
         {
             _fileStorage = fileStorage;
             _fileRepository = fileRepository;
             _logger = logger;
             _fileOptions = fileOptions.Value;
         }
-        
+
         //todo: переделать на контракты для UI
         public async Task<File> SaveFileAsync(IFormFile file, string userId)
         {
@@ -34,15 +35,11 @@ namespace NoteManager.Api.Services
             try
             {
                 if (file.Length > _fileOptions.MaxSize)
-                {
-                    throw new Exception(message:$"File size greater than {_fileOptions.MaxSize}", new FileLoadException());
-                }
+                    throw new Exception($"File size greater than {_fileOptions.MaxSize}", new FileLoadException());
 
                 if (!_fileOptions.AllowedFormats.Contains(Path.GetExtension(file.FileName)))
-                {
                     throw new Exception($"Invalid image format. Supported {_fileOptions.AllowedFormats}");
-                }
-                
+
                 var entryFile = await _fileRepository.GetByUserIdAsync(userId);
                 var fileModel = new File();
                 if (entryFile == null)
@@ -55,6 +52,7 @@ namespace NoteManager.Api.Services
                     FillFile(ref entryFile, file, userId);
                     result = await _fileRepository.UpdateAsync(entryFile);
                 }
+
                 await _fileStorage.SaveFileAsync(file, result);
                 await _fileRepository.CommitChanges();
             }
@@ -63,6 +61,7 @@ namespace NoteManager.Api.Services
                 _logger.LogError($"Error while writing file. {e.Message}", e);
                 throw;
             }
+
             _logger.LogInformation("File uploaded");
             return result;
         }
@@ -71,10 +70,7 @@ namespace NoteManager.Api.Services
         public async Task DeleteFileAsync(string userId)
         {
             var file = await _fileRepository.GetByUserIdAsync(userId);
-            if (file == null)
-            {
-                throw new FileNotFoundException();
-            }
+            if (file == null) throw new FileNotFoundException();
             try
             {
                 await _fileRepository.DeleteAsync(file);

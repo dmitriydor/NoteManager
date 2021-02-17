@@ -5,6 +5,5 @@ namespace NoteManager.Tests.Services
     [TestFixture]
     public class AuthServiceTests
     {
-        
     }
 }
