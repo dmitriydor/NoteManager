@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoteManager.Api", "NoteMana
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoteManager.Tests", "NoteManager.Tests\NoteManager.Tests.csproj", "{5896F63A-CB60-4F84-A3D7-E5C4C2F9196F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoteManager.Domain", "NoteManager.Domain\NoteManager.Domain.csproj", "{47F696C7-4521-484F-8035-16C7A44CCB34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoteManager.Infrasturcture", "NoteManager.Infrasturcture\NoteManager.Infrasturcture.csproj", "{E47C36F2-E95A-4798-84D3-FCD9C50A72C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{5896F63A-CB60-4F84-A3D7-E5C4C2F9196F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5896F63A-CB60-4F84-A3D7-E5C4C2F9196F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5896F63A-CB60-4F84-A3D7-E5C4C2F9196F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47F696C7-4521-484F-8035-16C7A44CCB34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47F696C7-4521-484F-8035-16C7A44CCB34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47F696C7-4521-484F-8035-16C7A44CCB34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47F696C7-4521-484F-8035-16C7A44CCB34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E47C36F2-E95A-4798-84D3-FCD9C50A72C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E47C36F2-E95A-4798-84D3-FCD9C50A72C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E47C36F2-E95A-4798-84D3-FCD9C50A72C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E47C36F2-E95A-4798-84D3-FCD9C50A72C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

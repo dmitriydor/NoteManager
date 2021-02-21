@@ -2,8 +2,8 @@
 using Moq;
 using NoteManager.Api.Contracts.Requests;
 using NoteManager.Api.Controllers;
-using NoteManager.Api.Models;
-using NoteManager.Api.Services;
+using NoteManager.Domain.Models;
+using NoteManager.Infrasturcture.Services;
 using NUnit.Framework;
 
 namespace NoteManager.Tests.Controllers

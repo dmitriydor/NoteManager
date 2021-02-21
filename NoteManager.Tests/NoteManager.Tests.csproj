@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="10.0.0" />
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
+        <PackageReference Include="AutoMapper" Version="10.1.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
         <PackageReference Include="Moq" Version="4.14.6" />
         <PackageReference Include="nunit" Version="3.12.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
@@ -17,6 +17,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\NoteManager.Api\NoteManager.Api.csproj" />
+      <ProjectReference Include="..\NoteManager.Domain\NoteManager.Domain.csproj" />
+      <ProjectReference Include="..\NoteManager.Infrasturcture\NoteManager.Infrasturcture.csproj" />
     </ItemGroup>
 
 </Project>

@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NoteManager.Api.Data.Repositories;
-using NoteManager.Api.Data.Storage;
-using NoteManager.Api.Infrastructure.Extensions;
-using NoteManager.Api.Options;
-using NoteManager.Api.Services;
+using NoteManager.Api.Extensions;
+using NoteManager.Domain.Options;
+using NoteManager.Domain.Repositories;
+using NoteManager.Domain.Storage;
+using NoteManager.Infrasturcture.Services;
 
 namespace NoteManager.Api
 {

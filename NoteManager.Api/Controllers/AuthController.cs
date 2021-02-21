@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NoteManager.Api.Contracts.Requests;
 using NoteManager.Api.Contracts.Responses;
-using NoteManager.Api.Services;
+using NoteManager.Infrasturcture.Services;
 
 namespace NoteManager.Api.Controllers
 {

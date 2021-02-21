@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NoteManager.Api.Contracts.Responses;
-using NoteManager.Api.Models;
-using NoteManager.Api.Services;
-using FileOptions = NoteManager.Api.Options.FileOptions;
+using NoteManager.Domain.Models;
+using NoteManager.Infrasturcture.Services;
+using FileOptions = NoteManager.Domain.Options.FileOptions;
 
 namespace NoteManager.Api.Controllers
 {

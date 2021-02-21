@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NoteManager.Api.Contracts.Requests;
 using NoteManager.Api.Contracts.Responses;
-using NoteManager.Api.Models;
-using NoteManager.Api.Services;
+using NoteManager.Domain.Models;
+using NoteManager.Infrasturcture.Services;
 
 namespace NoteManager.Api.Controllers
 {
